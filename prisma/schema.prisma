@@ -1,0 +1,164 @@
+// prisma/schema.prisma - النسخة الكاملة
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ✨ جدول إعدادات الموقع (كل شيء قابل للتعديل)
+model SiteSettings {
+  id            Int     @id @default(autoincrement())
+  key           String  @unique  // مثل: "site_name", "whatsapp_number"
+  value         String?
+  type          String  @default("string") // string, number, boolean, json
+  description   String? // وصف للإعداد للمدير
+  updatedAt     DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ✨ جدول الخدمات
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String   @db.Text
+  content     String?  @db.Text  // محتوى تفصيلي
+  imageUrl    String?
+  slug        String   @unique
+  
+  
+  // التسعير والوقت
+  price       Float?
+  currency    String   @default("SAR")
+  duration    String?  // "2-3 ساعات"
+  
+  // التصنيف والتوفر
+  category    String   @default("تنظيف")
+  isPopular   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)  // لترتيب العرض
+  
+  // المناطق
+  cities      String[] // ["الدمام", "الخبر", ...]
+  
+  // الميزات (تظهر كأيقونات)
+  features    String[] // ["ضمان", "مواد آمنة", ...]
+  
+  // تحسينات SEO
+  metaTitle   String?  @db.VarChar(70)
+  metaDesc    String?  @db.VarChar(160)
+  keywords    String[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // علاقات
+  articles    Article[]
+  leads       Lead[]
+
+  @@map("services")
+}
+
+// ✨ جدول المقالات
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  content     String   @db.Text  // يدعم HTML
+  excerpt     String?  @db.VarChar(200) // ملخص قصير
+  imageUrl    String?
+  slug        String   @unique
+  
+  
+  // التصنيف
+  category    String   @default("مقالات")
+  tags        String[]
+  
+  // المدينة المستهدفة (لـ SEO المحلي)
+  city        String?
+  serviceId   Int?
+  
+  // تحسينات القراءة
+  readTime    Int?     // دقائق
+  views       Int      @default(0)
+  
+  // SEO
+  metaTitle   String?  @db.VarChar(70)
+  metaDesc    String?  @db.VarChar(160)
+  
+  // النشر
+  isPublished Boolean  @default(true)
+  publishedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // علاقات
+  service     Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@map("articles")
+}
+
+// ✨ جدول طلبات العملاء (Leads)
+model Lead {
+  id          Int      @id @default(autoincrement())
+  name        String
+  phone       String
+  email       String?
+  city        String
+  serviceId   Int?
+  serviceName String   // نسخة احتياطية للاسم
+  message     String?  @db.Text
+  status      String   @default("new") // new, contacted, completed, cancelled
+  source      String?  // form, whatsapp, phone
+  notes       String?  @db.Text  // ملاحظات داخلية
+  assignedTo  String?  // اسم الموظف المسؤول
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // علاقات
+  service     Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@map("leads")
+}
+
+// ✨ جدول المستخدمين (لإدارة الصلاحيات)
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String   // مشفر
+  role      String   @default("editor") // admin, editor, viewer
+  isActive  Boolean  @default(true)
+  lastLogin DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ✨ جدول الوسائط (لإدارة الصور)
+model Media {
+  id          Int      @id @default(autoincrement())
+  filename    String
+  originalName String
+  url         String
+  mimeType    String
+  size        Int      // بالبايت
+  uploadedBy  String?
+  
+  // ربط اختياري
+  serviceId   Int?
+  articleId   Int?
+  
+  createdAt   DateTime @default(now())
+
+  @@map("media")
+}
+
+

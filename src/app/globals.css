@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+:root {
+  --font-cairo: "Cairo", system-ui, sans-serif;
+  --gradient-hero: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #ecfdf5 100%);
+  --shadow-glass: 0 10px 40px -10px rgba(14, 165, 233, 0.15);
+}
+
+@layer base {
+  html { 
+    scroll-behavior: smooth; 
+    font-family: var(--font-cairo); 
+  }
+  body { 
+    @apply bg-slate-50 text-slate-800 antialiased; 
+    background: var(--gradient-hero);
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4 { 
+    @apply font-bold leading-tight; 
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/85 backdrop-blur-xl border border-white/40 rounded-2xl;
+    box-shadow: var(--shadow-glass);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass:hover { 
+    @apply bg-white/95 border-white/60 -translate-y-1 shadow-2xl; 
+  }
+  
+  .btn-primary {
+    @apply px-8 py-4 bg-gradient-to-r from-sky-600 to-sky-500 
+           text-white font-bold rounded-2xl shadow-lg 
+           hover:shadow-xl hover:-translate-y-1 active:scale-95 
+           transition-all duration-300 inline-flex items-center justify-center gap-2;
+  }
+  
+  .btn-secondary {
+    @apply px-8 py-4 bg-white text-sky-600 font-bold rounded-2xl 
+           border-2 border-sky-200 hover:bg-sky-50 
+           hover:border-sky-400 transition-all duration-300 
+           inline-flex items-center justify-center gap-2;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-extrabold text-center mb-3 
+           bg-gradient-to-r from-sky-600 to-emerald-500 
+           bg-clip-text text-transparent;
+  }
+  
+  .section-sub {
+    @apply text-lg text-slate-600 text-center mb-12 max-w-2xl mx-auto;
+  }
+}
+
+@layer utilities {
+  .animate-fade-up { 
+    animation: fadeUp 0.6s ease-out forwards; 
+  }
+  .animate-float { 
+    animation: float 4s ease-in-out infinite; 
+  }
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+}
+
+/* ✅ تعريف الحركات بصيغة CSS الصحيحة */
+@keyframes fadeUp {
+  0% { 
+    opacity: 0; 
+    transform: translateY(24px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+/* تحسينات الجوال */
+@media (max-width: 768px) {
+  .section-title { @apply text-2xl; }
+  .btn-primary, .btn-secondary { @apply px-6 py-3 w-full; }
+}
+
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+
+
+/* في نهاية ملف globals.css */
+
+/* حركة شريط الثقة */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* تأثيرات hover متقدمة */
+.glass {
+  @apply bg-white/85 backdrop-blur-xl border border-white/40 rounded-2xl;
+  box-shadow: var(--shadow-glass);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass:hover { 
+  @apply bg-white/95 border-white/60 -translate-y-1 shadow-2xl; 
+}
+
+/* أزرار مع تدرج متحرك */
+.btn-primary {
+  @apply px-8 py-4 bg-gradient-to-r from-sky-600 to-sky-500 
+         text-white font-bold rounded-2xl shadow-lg 
+         hover:shadow-xl hover:-translate-y-1 active:scale-95 
+         transition-all duration-300 inline-flex items-center justify-center gap-2;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* أضف هذا في نهاية globals.css */
+
+/* 🎨 ألوان خاصة بلوحة التحكم */
+:root {
+  --admin-sidebar-width: 288px;
+}
+
+/* 📱 تجاوب القائمة الجانبية */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* ✨ تأثيرات إضافية */
+.glass {
+  @apply bg-white/90 backdrop-blur-xl border border-white/50 rounded-2xl;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary {
+  @apply px-6 py-3 bg-gradient-to-r from-sky-600 to-sky-500 
+         text-white font-semibold rounded-xl shadow-md 
+         hover:shadow-lg hover:-translate-y-0.5 
+         active:scale-95 transition-all duration-200
+         inline-flex items-center justify-center gap-2;
+}
+
+/* 🎯 تحسينات الجداول */
+table {
+  @apply w-full text-right;
+}
+th {
+  @apply font-semibold text-slate-600 text-sm uppercase tracking-wider;
+}
+td {
+  @apply py-3 px-4 text-slate-700;
+}
+tr:hover {
+  @apply bg-slate-50/80;
+}
+
+/* 🎨 ألوان للحالات */
+.status-new { @apply bg-amber-100 text-amber-700; }
+.status-contacted { @apply bg-sky-100 text-sky-700; }
+.status-completed { @apply bg-emerald-100 text-emerald-700; }
+.status-cancelled { @apply bg-slate-100 text-slate-700; }
+
+
+
+/* 🎬 أنيميشن العوم للأزرار */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 📱 تحسينات للجوال: تصغير الأزرار قليلاً */
+@media (max-width: 640px) {
+  .fixed.bottom-6.left-6,
+  .fixed.bottom-6.right-6 {
+    width: 3.25rem; /* 13 */
+    height: 3.25rem;
+  }
+  .fixed.bottom-6.left-6 svg,
+  .fixed.bottom-6.right-6 svg {
+    width: 1.25rem; /* 5 */
+    height: 1.25rem;
+  }
+}
