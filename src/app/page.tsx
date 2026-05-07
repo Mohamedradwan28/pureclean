@@ -4,6 +4,8 @@ import ServiceCard from "@/components/ServiceCard";
 import ArticleCard from "@/components/ArticleCard";
 import CoverageArea from "@/components/CoverageArea";
 import { Droplets, Shield, Clock, Star } from "lucide-react";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const [services, articles] = await Promise.all([

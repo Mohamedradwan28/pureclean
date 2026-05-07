@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
 import ServiceCard from "@/components/ServiceCard";
 import { Droplets, Shield, Clock } from "lucide-react";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "خدمات التنظيف بالبخار | بور كلين للايف - المنطقة الشرقية",

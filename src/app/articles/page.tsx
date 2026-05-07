@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Metadata } from "next";
 import ArticleCard from "@/components/ArticleCard";
 import { Search } from "lucide-react";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "مقالات تنظيف | نصائح واحترافية من بور كلين للايف",
