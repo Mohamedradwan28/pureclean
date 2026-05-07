@@ -5,13 +5,18 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined 
 }
 
-// ✅ إنشاء عميل Prisma بإعدادات آمنة لـ Vercel
+// ✅ قراءة الرابط مع تحقق أمني
+const databaseUrl = process.env.DATABASE_URL
+
+// ✅ إنشاء عميل Prisma برابط آمن أو قيمة وهمية للبناء
+// (في الإنتاج الحقيقي، DATABASE_URL يجب أن يكون موجوداً دائماً)
 export const prisma = globalForPrisma.prisma || new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  // ✅ منع الاتصال التلقائي أثناء البناء
   datasources: {
     db: {
-      url: process.env.DATABASE_URL,
+      // ✅ استخدام الرابط إذا وجد، أو قيمة وهمية لمنع كسر البناء
+      // في الإنتاج، إذا كان undefined سيفشل الاتصال بشكل آمن وسيسجل الخطأ
+      url: databaseUrl || 'postgresql://placeholder:placeholder@localhost:5432/placeholder',
     },
   },
 })
@@ -20,13 +25,11 @@ if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma
 }
 
-// ✅ دالة آمنة للاستعلامات تتعامل مع أخطاء الاتصال
+// ✅ دالة آمنة للاستعلامات
 export async function safeQuery<T>(query: () => Promise<T>, fallback: T): Promise<T> {
   try {
-    // تأكد من وجود الرابط قبل الاتصال
-    if (!process.env.DATABASE_URL) {
-      console.warn('⚠️ DATABASE_URL غير موجود')
-      return fallback
+    if (!process.env.DATABASE_URL?.includes('neon.tech')) {
+      console.warn('⚠️ DATABASE_URL قد يكون غير صحيح')
     }
     return await query()
   } catch (error) {
